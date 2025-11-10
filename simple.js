@@ -62,7 +62,7 @@ function playGame() {
   // Background scroll
   image(bg, bgx, bgy);
   image(bg, bgx, bgy - bg.height);
-  bgy += 1;
+  bgy += 5;
   if (bgy >= bg.height) bgy = 0;
   
   if (!bgMusic.isPlaying()) bgMusic.loop();
