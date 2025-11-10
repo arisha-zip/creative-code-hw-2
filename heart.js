@@ -7,7 +7,7 @@ class Heart {
     this.h = height_;
     this.t = 0; // timer for trig-based motion
     this.speed = speed_;
-    this.sprite = loadImage("finalheart.png");
+    this.sprite = loadImage("./first_game_design/finalheart.png");
   }
 
   move() {
