@@ -24,17 +24,17 @@ let heartSound, alienSound, bgMusic;
 
 function preload() {
   // Load all assets here in p5.js
-  bg = loadImage("./first_game_design/finalpixelsky.png");
-  g = loadImage("./first_game_design/grassblock.png");
-  titleCard = loadImage("./first_game_design/finaltitlecard.png");
-  endCard = loadImage("./first_game_design/endcard.png");
-  winCard = loadImage("./first_game_design/youwin.png");
+  bg = loadImage("assets/finalpixelsky.png");
+  g = loadImage("assets/grassblock.png");
+  titleCard = loadImage("assets/finaltitlecard.png");
+  endCard = loadImage("assets/endcard.png");
+  winCard = loadImage("assets/youwin.png");
   
-  heartSound = loadSound("./first_game_design/twinklewoosh.wav");
-  alienSound = loadSound("./first_game_design/alienhit.wav");
-  bgMusic = loadSound("./first_game_design/ghostwaltz.wav");
+  heartSound = loadSound("assets/twinklewoosh.wav");
+  alienSound = loadSound("assets/alienhit.wav");
+  bgMusic = loadSound("assets/ghostwaltz.wav");
 
-  pixelfy = loadFont("./first_game_design/pixelfysans.ttf");
+  pixelfy = loadFont("assets/pixelfysans.ttf");
 }
 
 function setup() {
