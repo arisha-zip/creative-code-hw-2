@@ -15,7 +15,7 @@ class Person {
     this.isJumping = false;
     this.isFalling = false;
 
-    this.sprite = loadImage("pinkgirly.png");
+    this.sprite = loadImage("assets/pinkgirly.png");
     this.facingRight = true; // determines direction based on arrow key
   }
 

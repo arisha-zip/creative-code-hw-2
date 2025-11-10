@@ -11,11 +11,11 @@ class Obstacle {
 
     // Assign image based on size
     if (this.w === 50) {
-      this.sprite = loadImage("greenalien.png");
+      this.sprite = loadImage("assets/greenalien.png");
     } else if (this.w === 65) {
-      this.sprite = loadImage("bluealien.png");
+      this.sprite = loadImage("assets/bluealien.png");
     } else if (this.w === 80) {
-      this.sprite = loadImage("purplealien.png");
+      this.sprite = loadImage("assets/purplealien.png");
     }
   }
 
