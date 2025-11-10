@@ -1,5 +1,6 @@
 let person1;
 let heart;
+
 let obstacles = [];
 let obstacleSizes = [50, 65, 80];
 
@@ -10,39 +11,41 @@ let startTime;
 let elapsedTime;
 let displayTime;
 let heartTimer = 0;
-let nextHeartTime;
+let nextHeartTime; 
+
 let spawnTimer = 0;
 let spawnInterval = 3.0;
 
-let bg, g, titleCard, endCard, winCard, pixelfy;
+let bg, g, titleCard, endCard, winCard;
+let pixelfy;
 let bgx = 0, bgy = 0;
 
 let heartSound, alienSound, bgMusic;
 
-// preload() is where we load all assets before setup()
 function preload() {
-  bg = loadImage("finalpixelsky.png");
-  g = loadImage("grassblock.png");
-  titleCard = loadImage("finaltitlecard.png");
-  endCard = loadImage("endcard.png");
-  winCard = loadImage("youwin.png");
-  pixelfy = loadFont("pixelfysans.ttf");
+  // Load all assets here in p5.js
+  bg = loadImage("assets/finalpixelsky.png");
+  g = loadImage("assets/grassblock.png");
+  titleCard = loadImage("assets/finaltitlecard.png");
+  endCard = loadImage("assets/endcard.png");
+  winCard = loadImage("assets/youwin.png");
+  
+  heartSound = loadSound("assets/twinklewoosh.wav");
+  alienSound = loadSound("assets/alienhit.wav");
+  bgMusic = loadSound("assets/ghostwaltz.wav");
 
-  heartSound = loadSound("twinklewoosh.wav");
-  alienSound = loadSound("alienhit.wav");
-  bgMusic = loadSound("ghostwaltz.wav");
+  pixelfy = loadFont("assets/pixelfysans.ttf");
 }
 
 function setup() {
   createCanvas(800, 400);
   bgy = 0;
   gameState = "START";
-
+  
   bg.resize(width, 0);
+  
   person1 = new Person(width / 8, height - 210);
-  obstacles = [];
   heart = null;
-
   nextHeartTime = random(8, 20);
 }
 
@@ -56,44 +59,44 @@ function draw() {
 }
 
 function playGame() {
-  // BACKGROUND SCROLL
+  // Background scroll
   image(bg, bgx, bgy);
   image(bg, bgx, bgy - bg.height);
   bgy += 5;
   if (bgy >= bg.height) bgy = 0;
-
+  
   if (!bgMusic.isPlaying()) bgMusic.loop();
 
-  // PLAYER MOVEMENT + DISPLAY
+  // Player
   person1.move();
   person1.falling();
   person1.display();
 
-  // ALIEN ABDUCTION BEAM
+  // Alien beam + ground
   image(g, 75, 233, 650, 90);
   fill(55, 235, 52, 70);
   noStroke();
   quad(150, -20, 650, -20, 800, 420, 0, 420);
-  strokeWeight(5);
-  stroke(55, 235, 52, 80);
 
-  // TIMER
+  // Timer
   elapsedTime = (millis() - startTime) / 1000.0;
   displayTime = round(elapsedTime * 100) / 100.0;
   fill(255);
+  textFont(pixelfy);
   textSize(25);
   textAlign(LEFT);
   text("TIME: " + displayTime + "s", 20, 40);
 
-  // LIVES
+  // Lives
   textAlign(RIGHT);
   text("LIVES REMAINING: " + lives, 780, 40);
+
   if (elapsedTime >= 120) {
     gameState = "WIN";
     return;
   }
 
-  // SPAWN RATE ADJUSTMENTS
+  // Spawn interval changes over time
   spawnTimer += 1.0 / 60.0;
   if (elapsedTime > 100) spawnInterval = 0.5;
   else if (elapsedTime > 80) spawnInterval = 0.9;
@@ -102,7 +105,7 @@ function playGame() {
   else if (elapsedTime > 20) spawnInterval = 2.0;
   else spawnInterval = 3.0;
 
-  // SPAWN OBSTACLES
+  // Spawn obstacles
   if (spawnTimer >= spawnInterval) {
     spawnTimer = 0;
     let sizeIndex = int(random(obstacleSizes.length));
@@ -113,7 +116,7 @@ function playGame() {
     obstacles.push(new Obstacle(width, yPos, w, h, speed));
   }
 
-  // OBSTACLE LOGIC
+  // Move and display obstacles
   for (let i = obstacles.length - 1; i >= 0; i--) {
     let obs = obstacles[i];
     obs.move();
@@ -122,7 +125,6 @@ function playGame() {
     if (personIntersect(person1, obs)) {
       if (alienSound.isPlaying()) alienSound.stop();
       alienSound.play();
-
       lives--;
       resetGame();
       break;
@@ -131,16 +133,16 @@ function playGame() {
     if (obs.isOffScreen()) obstacles.splice(i, 1);
   }
 
-  // HEART LOGIC
+  // Heart logic
   heartTimer += 1.0 / 60.0;
-  if (!heart && heartTimer > nextHeartTime) {
+  if (heart === null && heartTimer > nextHeartTime) {
     let heartY = (height - 210) + random(-15, 15);
     heart = new Heart(width, heartY, 40, 40, random(2, 4));
     heartTimer = 0;
     nextHeartTime = random(8, 20);
   }
 
-  if (heart) {
+  if (heart !== null) {
     heart.move();
     heart.display();
 
@@ -157,6 +159,8 @@ function playGame() {
   if (lives <= 0) gameState = "END";
 }
 
+// --- helper functions ---
+
 function getObstacleSpeed(t) {
   if (t < 20) return 3;
   else if (t < 40) return 4;
@@ -166,19 +170,19 @@ function getObstacleSpeed(t) {
   else return 8;
 }
 
-function personIntersect(person1, obstacle1) {
-  let distanceX = (person1.x + person1.w / 2) - (obstacle1.x + obstacle1.w / 2);
-  let distanceY = (person1.y + person1.h / 2) - (obstacle1.y + obstacle1.h / 2);
-  let combinedHalfW = person1.w / 2 + obstacle1.w / 2;
-  let combinedHalfH = person1.h / 2 + obstacle1.h / 2;
+function personIntersect(p, o) {
+  let distanceX = (p.x + p.w / 2) - (o.x + o.w / 2);
+  let distanceY = (p.y + p.h / 2) - (o.y + o.h / 2);
+  let combinedHalfW = p.w / 2 + o.w / 2;
+  let combinedHalfH = p.h / 2 + o.h / 2;
   return (abs(distanceX) < combinedHalfW && abs(distanceY) < combinedHalfH);
 }
 
-function personIntersectHeart(person1, heart) {
-  let distanceX = (person1.x + person1.w / 2) - (heart.x + heart.w / 2);
-  let distanceY = (person1.y + person1.h / 2) - (heart.y + heart.h / 2);
-  let combinedHalfW = person1.w / 2 + heart.w / 2;
-  let combinedHalfH = person1.h / 2 + heart.h / 2;
+function personIntersectHeart(p, h) {
+  let distanceX = (p.x + p.w / 2) - (h.x + h.w / 2);
+  let distanceY = (p.y + p.h / 2) - (h.y + h.h / 2);
+  let combinedHalfW = p.w / 2 + h.w / 2;
+  let combinedHalfH = p.h / 2 + h.h / 2;
   return (abs(distanceX) < combinedHalfW && abs(distanceY) < combinedHalfH);
 }
 
@@ -253,123 +257,4 @@ function resetGame() {
   person1 = new Person(width / 8, height - 210);
   obstacles = [];
   heart = null;
-}
-
-// -------------------- CLASSES --------------------
-
-class Person {
-  constructor(posX, posY) {
-    this.x = posX;
-    this.y = posY;
-    this.vy = 0;
-    this.gravity = 0.6;
-    this.w = 50;
-    this.h = 50;
-    this.speed = 10;
-    this.isJumping = false;
-    this.isFalling = false;
-    this.sprite = loadImage("pinkgirly.png");
-    this.sprite.resize(this.w, this.h);
-    this.facingRight = true;
-  }
-
-  move() {
-    if (keyIsPressed) {
-      if (keyCode === LEFT_ARROW && this.x > 50) {
-        this.x -= this.speed;
-        this.facingRight = false;
-      } else if (keyCode === RIGHT_ARROW && this.x < 700) {
-        this.x += this.speed;
-        this.facingRight = true;
-      } else if (key === "w" && !this.isFalling) {
-        this.vy = -12;
-        this.isFalling = true;
-      }
-    }
-  }
-
-  falling() {
-    if (this.isFalling) {
-      this.vy += this.gravity;
-      this.y += this.vy;
-      if (this.y >= height - 210) {
-        this.y = height - 210;
-        this.vy = 0;
-        this.isFalling = false;
-      }
-    }
-  }
-
-  display() {
-    push();
-    if (!this.facingRight) {
-      translate(this.x + this.w, this.y);
-      scale(-1, 1);
-      image(this.sprite, 0, 0, this.w, this.h);
-    } else {
-      image(this.sprite, this.x, this.y, this.w, this.h);
-    }
-    pop();
-  }
-}
-
-class Obstacle {
-  constructor(posX, posY, width_, height_, speed_) {
-    this.x = posX;
-    this.y = posY;
-    this.w = width_;
-    this.h = height_;
-    this.speed = speed_;
-    this.startY = posY;
-    this.t = 0;
-
-    if (this.w === 50) this.sprite = loadImage("greenalien.png");
-    else if (this.w === 65) this.sprite = loadImage("bluealien.png");
-    else if (this.w === 80) this.sprite = loadImage("purplealien.png");
-  }
-
-  move() {
-    this.x -= this.speed;
-    this.t += 0.05;
-    this.y = this.startY + sin(this.t * 1.7) * 20 + cos(this.t * 0.8) * 10;
-  }
-
-  display() {
-    image(this.sprite, this.x, this.y, this.w, this.h);
-  }
-
-  isOffScreen() {
-    return this.x + this.w < 0;
-  }
-}
-
-class Heart {
-  constructor(posX, posY, width_, height_, speed_) {
-    this.x = posX;
-    this.y = posY;
-    this.startY = posY;
-    this.w = width_;
-    this.h = height_;
-    this.speed = speed_;
-    this.t = 0;
-    this.sprite = loadImage("finalheart.png");
-  }
-
-  move() {
-    this.x -= this.speed;
-    this.t += 0.05;
-    this.y = this.startY + sin(this.t * 1.7) * 20 + cos(this.t * 0.8) * 10;
-  }
-
-  display() {
-    if (this.sprite) image(this.sprite, this.x, this.y, this.w, this.h);
-    else {
-      fill(255, 0, 0);
-      rect(this.x, this.y, this.w, this.h);
-    }
-  }
-
-  isOffScreen() {
-    return this.x + this.w < 0;
-  }
 }
