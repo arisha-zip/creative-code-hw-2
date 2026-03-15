@@ -38,7 +38,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(800, 400);
+  createCanvas(800, 580);
   bgy = 0;
   gameState = "START";
   
