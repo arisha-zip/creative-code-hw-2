@@ -214,8 +214,8 @@ pop();
   let btnW = 220;
   let btnH = 90;
 
-  let btnX = 40
-  let btnY = 460
+  let btnX = 37
+  let btnY = 450
 
   let hovering =
     mouseX > btnX &&
