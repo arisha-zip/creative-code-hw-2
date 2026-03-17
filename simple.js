@@ -202,12 +202,16 @@ function startGame() {
   floatT += floatSpeed;
 
   let floatX = width * 0.75;
-  let floatY = height * 0.4 + sin(floatT) * floatAmount;
+  let floatY = 350 + sin(floatT) * floatAmount; // lower
 
-  image(person1.sprite, floatX - 40, floatY, 80, 80);
+push();
+translate(floatX, floatY);
+rotate(radians(-45));
+image(person1.sprite, -40, -40, 80, 80);
+pop();
 
   // BUTTON
-  let btnW = 220;
+  let btnW = 100;
   let btnH = 90;
 
   let btnX = width * 0.15;
