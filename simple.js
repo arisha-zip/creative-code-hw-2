@@ -46,7 +46,7 @@ function setup() {
   sceneOffset = (height - 400) / 2;
 
   // align ground with island top
-  groundY = 290;
+  groundY = 270;
 
   bgy = 0;
   gameState = "START";
