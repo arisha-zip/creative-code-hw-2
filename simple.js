@@ -41,6 +41,7 @@ function preload() {
 
 function setup() {
   createCanvas(800, 580);
+   noSmooth();
 
   // center the original 400px scene
   sceneOffset = (height - 400) / 2;
