@@ -91,11 +91,11 @@ function playGame() {
   fill(55, 235, 52, 70);
   noStroke();
   quad(
-    150, -20 + sceneOffset,
-    650, -20 + sceneOffset,
-    800, height,
+    width * 0.25, -20 + sceneOffset,
+    width * 0.75, -20 + sceneOffset,
+    width, height,
     0, height
-  );
+);
 
   // timer
   elapsedTime = (millis() - startTime) / 1000.0;
