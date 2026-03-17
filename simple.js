@@ -25,12 +25,24 @@ let heartSound, alienSound, bgMusic;
 let sceneOffset;
 let groundY;
 
+// BUTTON FEATURES
+let beginBtn;
+let beginBtnHover;
+
+let floatT = 0;
+let floatSpeed = 0.03;
+let floatAmount = 10;
+
 function preload() {
   bg = loadImage("assets/finalpixelsky.png");
   g = loadImage("assets/grassblock.png");
   titleCard = loadImage("assets/finaltitlecard.png");
   endCard = loadImage("assets/endcard.png");
   winCard = loadImage("assets/youwin.png");
+
+  // BUTTON IMAGES
+  beginBtn = loadImage("assets/begin.png");
+  beginBtnHover = loadImage("assets/begin_hover.png");
 
   heartSound = loadSound("assets/twinklewoosh.wav");
   alienSound = loadSound("assets/alienhit.wav");
@@ -41,12 +53,9 @@ function preload() {
 
 function setup() {
   createCanvas(800, 580);
-   noSmooth();
+  noSmooth();
 
-  // center the original 400px scene
   sceneOffset = (height - 400) / 2;
-
-  // align ground with island top
   groundY = 280;
 
   bgy = 0;
@@ -71,7 +80,6 @@ function draw() {
 
 function playGame() {
 
-  // background scroll
   image(bg, bgx, bgy);
   image(bg, bgx, bgy - bg.height);
 
@@ -80,7 +88,7 @@ function playGame() {
 
   if (!bgMusic.isPlaying()) bgMusic.loop();
 
-  // alien beam
+  // BEAM (background layer)
   fill(55, 235, 52, 70);
   noStroke();
   quad(
@@ -90,15 +98,15 @@ function playGame() {
     0, height
   );
 
-  // player
+  // ISLAND
+  image(g, 75, 233 + sceneOffset, 650, 90);
+
+  // PLAYER
   person1.move();
   person1.falling();
   person1.display();
 
-  // island
-  image(g, 75, 233 + sceneOffset, 650, 90);
-
-  // timer
+  // TIMER
   elapsedTime = (millis() - startTime) / 1000.0;
   displayTime = round(elapsedTime * 100) / 100.0;
 
@@ -108,7 +116,7 @@ function playGame() {
   textAlign(LEFT);
   text("TIME: " + displayTime + "s", 20, 40);
 
-  // lives
+  // LIVES
   textAlign(RIGHT);
   text("LIVES REMAINING: " + lives, width - 20, 40);
 
@@ -117,7 +125,6 @@ function playGame() {
     return;
   }
 
-  // spawn timing
   spawnTimer += 1.0 / 60.0;
 
   if (elapsedTime > 100) spawnInterval = 0.5;
@@ -127,7 +134,6 @@ function playGame() {
   else if (elapsedTime > 20) spawnInterval = 2.0;
   else spawnInterval = 3.0;
 
-  // spawn obstacle
   if (spawnTimer >= spawnInterval) {
     spawnTimer = 0;
 
@@ -141,16 +147,13 @@ function playGame() {
     obstacles.push(new Obstacle(width, yPos, w, h, speed));
   }
 
-  // update obstacles
   for (let i = obstacles.length - 1; i >= 0; i--) {
-
     let obs = obstacles[i];
 
     obs.move();
     obs.display();
 
     if (personIntersect(person1, obs)) {
-
       if (alienSound.isPlaying()) alienSound.stop();
       alienSound.play();
 
@@ -162,11 +165,9 @@ function playGame() {
     if (obs.isOffScreen()) obstacles.splice(i, 1);
   }
 
-  // heart spawning
   heartTimer += 1.0 / 60.0;
 
   if (heart === null && heartTimer > nextHeartTime) {
-
     let heartY = groundY + random(-15, 15);
 
     heart = new Heart(width, heartY, 40, 40, random(2, 4));
@@ -176,82 +177,69 @@ function playGame() {
   }
 
   if (heart !== null) {
-
     heart.move();
     heart.display();
 
     if (personIntersectHeart(person1, heart)) {
-
       if (heartSound.isPlaying()) heartSound.stop();
       heartSound.play();
 
       lives = min(lives + 1, 5);
-
       heart = null;
-    }
-
-    else if (heart.isOffScreen()) heart = null;
+    } else if (heart.isOffScreen()) heart = null;
   }
 
   if (lives <= 0) gameState = "END";
 }
 
-// helper functions
 
-function getObstacleSpeed(t) {
-  if (t < 20) return 3;
-  else if (t < 40) return 4;
-  else if (t < 60) return 5;
-  else if (t < 80) return 6;
-  else if (t < 100) return 7;
-  else return 8;
-}
-
-function personIntersect(p, o) {
-  let dx = (p.x + p.w / 2) - (o.x + o.w / 2);
-  let dy = (p.y + p.h / 2) - (o.y + o.h / 2);
-
-  return abs(dx) < (p.w / 2 + o.w / 2) &&
-         abs(dy) < (p.h / 2 + o.h / 2);
-}
-
-function personIntersectHeart(p, h) {
-  let dx = (p.x + p.w / 2) - (h.x + h.w / 2);
-  let dy = (p.y + p.h / 2) - (h.y + h.h / 2);
-
-  return abs(dx) < (p.w / 2 + h.w / 2) &&
-         abs(dy) < (p.h / 2 + h.h / 2);
-}
-
-// screens
-
+// TITLE SCREEN
 function startGame() {
+
   image(titleCard, 0, 0, width, height);
 
-  textAlign(LEFT);
-  textFont(pixelfy);
+  // FLOATING CHARACTER
+  floatT += floatSpeed;
 
-  fill(255, 111, 241);
-  text("Click anywhere to play!", 20, 250);
+  let floatX = width * 0.75;
+  let floatY = height * 0.4 + sin(floatT) * floatAmount;
 
-  textSize(14);
-  text("Avoid colliding with the aliens \nbefore they take you to space!", 20, 275);
+  image(person1.sprite, floatX - 40, floatY, 80, 80);
 
-  textSize(12);
-  fill(255);
-  text("Use the arrow keys to move. Press W to jump.", 20, 310);
+  // BUTTON
+  let btnW = 220;
+  let btnH = 90;
 
-  if (mouseIsPressed) {
+  let btnX = width * 0.15;
+  let btnY = height * 0.65;
+
+  let hovering =
+    mouseX > btnX &&
+    mouseX < btnX + btnW &&
+    mouseY > btnY &&
+    mouseY < btnY + btnH;
+
+  if (hovering) {
+    image(beginBtnHover, btnX, btnY, btnW, btnH);
+    cursor(HAND);
+  } else {
+    image(beginBtn, btnX, btnY, btnW, btnH);
+    cursor(ARROW);
+  }
+
+  if (hovering && mouseIsPressed) {
     gameState = "PLAY";
     startTime = millis();
   }
 }
 
+
+// END / WIN
+
 function endGame() {
   image(endCard, 0, 0, width, height);
 
   textAlign(CENTER);
-
   textSize(70);
   fill(255, 111, 241);
   text("GAME OVER", width / 2, height / 2);
@@ -276,7 +264,6 @@ function winGame() {
   image(winCard, 0, 0, width, height);
 
   textAlign(CENTER);
-
   textSize(70);
   fill(255, 111, 241);
   text("YOU WIN!", width / 2, height / 2);
@@ -294,6 +281,34 @@ function winGame() {
     gameState = "PLAY";
     startTime = millis();
   }
+}
+
+
+// HELPERS
+
+function getObstacleSpeed(t) {
+  if (t < 20) return 3;
+  else if (t < 40) return 4;
+  else if (t < 60) return 5;
+  else if (t < 80) return 6;
+  else if (t < 100) return 7;
+  else return 8;
+}
+
+function personIntersect(p, o) {
+  let dx = (p.x + p.w / 2) - (o.x + o.w / 2);
+  let dy = (p.y + p.h / 2) - (o.y + o.h / 2);
+
+  return abs(dx) < (p.w / 2 + o.w / 2) &&
+         abs(dy) < (p.h / 2 + o.h / 2);
+}
+
+function personIntersectHeart(p, h) {
+  let dx = (p.x + p.w / 2) - (h.x + h.w / 2);
+  let dy = (p.y + p.h / 2) - (h.y + h.h / 2);
+
+  return abs(dx) < (p.w / 2 + h.w / 2) &&
+         abs(dy) < (p.h / 2 + h.h / 2);
 }
 
 function resetGame() {

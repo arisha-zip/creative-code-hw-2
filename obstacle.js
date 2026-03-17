@@ -15,15 +15,15 @@ class Obstacle {
 
     // choose sprite based on size
     if (this.w === 50) {
-      this.sprite = loadImage("assets/greenalien.png");
+      this.sprite = loadImage("assets/greenaliennn.png");
     }
 
     else if (this.w === 65) {
-      this.sprite = loadImage("assets/bluealienn.png");
+      this.sprite = loadImage("assets/bluealiennn.png");
     }
 
     else if (this.w === 80) {
-      this.sprite = loadImage("assets/purplealienn.png");
+      this.sprite = loadImage("assets/purplealiennn.png");
     }
 
     else {
