@@ -91,8 +91,8 @@ function playGame() {
   fill(55, 235, 52, 70);
   noStroke();
   quad(
-    150, -80 + sceneOffset,
-    650, -80 + sceneOffset,
+    150, -90 + sceneOffset,
+    650, -90 + sceneOffset,
     800, height,
     0, height
   );
