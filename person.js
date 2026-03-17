@@ -18,7 +18,7 @@ class Person {
 
     this.isFalling = false;
 
-    this.sprite = loadImage("assets/pinkgirlygreenn.png");
+    this.sprite = loadImage("assets/pinkgirlygreen.png");
 
     this.facingRight = true;
   }
