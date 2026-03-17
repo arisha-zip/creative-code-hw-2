@@ -11,7 +11,7 @@ let startTime;
 let elapsedTime;
 let displayTime;
 let heartTimer = 0;
-let nextHeartTime; 
+let nextHeartTime;
 
 let spawnTimer = 0;
 let spawnInterval = 3.0;
@@ -22,7 +22,8 @@ let bgx = 0, bgy = 0;
 
 let heartSound, alienSound, bgMusic;
 
-let sceneOffset;   // controls vertical centering
+let sceneOffset;
+let groundY;
 
 function preload() {
   bg = loadImage("assets/finalpixelsky.png");
@@ -30,7 +31,7 @@ function preload() {
   titleCard = loadImage("assets/finaltitlecard.png");
   endCard = loadImage("assets/endcard.png");
   winCard = loadImage("assets/youwin.png");
-  
+
   heartSound = loadSound("assets/twinklewoosh.wav");
   alienSound = loadSound("assets/alienhit.wav");
   bgMusic = loadSound("assets/ghostwaltz.wav");
@@ -41,15 +42,20 @@ function preload() {
 function setup() {
   createCanvas(800, 580);
 
-  sceneOffset = (height - 400) / 2;   // centers the original scene
+  // center the original 400px scene
+  sceneOffset = (height - 400) / 2;
+
+  // align ground with island top
+  groundY = 233 + sceneOffset + 35;
 
   bgy = 0;
   gameState = "START";
-  
+
   bg.resize(width, 0);
-  
-  person1 = new Person(width / 8, height - 210 + sceneOffset);
+
+  person1 = new Person(width / 8, groundY);
   heart = null;
+
   nextHeartTime = random(8, 20);
 }
 
@@ -64,9 +70,10 @@ function draw() {
 
 function playGame() {
 
-  // scrolling background
+  // background scroll
   image(bg, bgx, bgy);
   image(bg, bgx, bgy - bg.height);
+
   bgy += 5;
   if (bgy >= bg.height) bgy = 0;
 
@@ -77,16 +84,17 @@ function playGame() {
   person1.falling();
   person1.display();
 
-  // beam + ground
+  // island
   image(g, 75, 233 + sceneOffset, 650, 90);
 
+  // alien beam
   fill(55, 235, 52, 70);
   noStroke();
   quad(
     150, -20 + sceneOffset,
     650, -20 + sceneOffset,
-    800, 420 + sceneOffset,
-    0, 420 + sceneOffset
+    800, height,
+    0, height
   );
 
   // timer
@@ -99,15 +107,16 @@ function playGame() {
   textAlign(LEFT);
   text("TIME: " + displayTime + "s", 20, 40);
 
+  // lives
   textAlign(RIGHT);
-  text("LIVES REMAINING: " + lives, 780, 40);
+  text("LIVES REMAINING: " + lives, width - 20, 40);
 
   if (elapsedTime >= 120) {
     gameState = "WIN";
     return;
   }
 
-  // obstacle spawn speed increases over time
+  // spawn timing
   spawnTimer += 1.0 / 60.0;
 
   if (elapsedTime > 100) spawnInterval = 0.5;
@@ -125,13 +134,13 @@ function playGame() {
     let w = obstacleSizes[sizeIndex];
     let h = w;
 
-    let yPos = (height - 210 + sceneOffset) + random(-15, 15);
+    let yPos = groundY + random(-15, 15);
     let speed = getObstacleSpeed(elapsedTime);
 
     obstacles.push(new Obstacle(width, yPos, w, h, speed));
   }
 
-  // move obstacles
+  // update obstacles
   for (let i = obstacles.length - 1; i >= 0; i--) {
 
     let obs = obstacles[i];
@@ -152,12 +161,12 @@ function playGame() {
     if (obs.isOffScreen()) obstacles.splice(i, 1);
   }
 
-  // heart spawn
+  // heart spawning
   heartTimer += 1.0 / 60.0;
 
   if (heart === null && heartTimer > nextHeartTime) {
 
-    let heartY = (height - 210 + sceneOffset) + random(-15, 15);
+    let heartY = groundY + random(-15, 15);
 
     heart = new Heart(width, heartY, 40, 40, random(2, 4));
 
@@ -186,11 +195,9 @@ function playGame() {
   if (lives <= 0) gameState = "END";
 }
 
-
 // helper functions
 
 function getObstacleSpeed(t) {
-
   if (t < 20) return 3;
   else if (t < 40) return 4;
   else if (t < 60) return 5;
@@ -199,35 +206,25 @@ function getObstacleSpeed(t) {
   else return 8;
 }
 
-
 function personIntersect(p, o) {
+  let dx = (p.x + p.w / 2) - (o.x + o.w / 2);
+  let dy = (p.y + p.h / 2) - (o.y + o.h / 2);
 
-  let distanceX = (p.x + p.w / 2) - (o.x + o.w / 2);
-  let distanceY = (p.y + p.h / 2) - (o.y + o.h / 2);
-
-  let combinedHalfW = p.w / 2 + o.w / 2;
-  let combinedHalfH = p.h / 2 + o.h / 2;
-
-  return abs(distanceX) < combinedHalfW &&
-         abs(distanceY) < combinedHalfH;
+  return abs(dx) < (p.w / 2 + o.w / 2) &&
+         abs(dy) < (p.h / 2 + o.h / 2);
 }
-
 
 function personIntersectHeart(p, h) {
+  let dx = (p.x + p.w / 2) - (h.x + h.w / 2);
+  let dy = (p.y + p.h / 2) - (h.y + h.h / 2);
 
-  let distanceX = (p.x + p.w / 2) - (h.x + h.w / 2);
-  let distanceY = (p.y + p.h / 2) - (h.y + h.h / 2);
-
-  let combinedHalfW = p.w / 2 + h.w / 2;
-  let combinedHalfH = p.h / 2 + h.h / 2;
-
-  return abs(distanceX) < combinedHalfW &&
-         abs(distanceY) < combinedHalfH;
+  return abs(dx) < (p.w / 2 + h.w / 2) &&
+         abs(dy) < (p.h / 2 + h.h / 2);
 }
 
+// screens
 
 function startGame() {
-
   image(titleCard, 0, 0, width, height);
 
   textAlign(LEFT);
@@ -241,88 +238,65 @@ function startGame() {
 
   textSize(12);
   fill(255);
-
-  text("Use the arrow keys to go LEFT and RIGHT. \nPress W to jump.", 20, 310);
+  text("Use the arrow keys to move. Press W to jump.", 20, 310);
 
   if (mouseIsPressed) {
-
     gameState = "PLAY";
     startTime = millis();
   }
 }
 
-
 function endGame() {
-
   image(endCard, 0, 0, width, height);
 
   textAlign(CENTER);
 
   textSize(70);
   fill(255, 111, 241);
-
   text("GAME OVER", width / 2, height / 2);
 
   fill(255);
   textSize(20);
-
   text("Time survived: " + displayTime + "s", width / 2, 230);
 
   textSize(14);
-  text("Click anywhere to start again!", width / 2, 255);
+  text("Click anywhere to restart", width / 2, 255);
 
   if (mouseIsPressed) {
-
     bgMusic.stop();
-
     lives = 5;
-
     resetGame();
-
     gameState = "PLAY";
-
     startTime = millis();
   }
 }
 
-
 function winGame() {
-
   image(winCard, 0, 0, width, height);
 
   textAlign(CENTER);
 
   textSize(70);
   fill(255, 111, 241);
-
   text("YOU WIN!", width / 2, height / 2);
 
   fill(255);
   textSize(20);
-
   text("Time survived: " + displayTime + "s", width / 2, 230);
 
   textSize(14);
-  text("That was a close one...\nClick anywhere to start again!", width / 2, 255);
+  text("Click to play again", width / 2, 255);
 
   if (mouseIsPressed) {
-
     lives = 5;
-
     resetGame();
-
     gameState = "PLAY";
-
     startTime = millis();
   }
 }
 
-
 function resetGame() {
-
-  person1 = new Person(width / 8, height - 210 + sceneOffset);
-
+  person1 = new Person(width / 8, groundY);
   obstacles = [];
-
   heart = null;
 }
