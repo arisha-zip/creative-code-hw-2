@@ -19,11 +19,11 @@ class Obstacle {
     }
 
     else if (this.w === 65) {
-      this.sprite = loadImage("assets/bluealien.png");
+      this.sprite = loadImage("assets/bluealienn.png");
     }
 
     else if (this.w === 80) {
-      this.sprite = loadImage("assets/purplealien.png");
+      this.sprite = loadImage("assets/purplealienn.png");
     }
 
     else {
