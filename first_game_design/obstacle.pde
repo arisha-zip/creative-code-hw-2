@@ -18,9 +18,9 @@ public class Obstacle {
     startY = posY;
 
   //OUTLINING DIFFERENT SIZES OF ALIENS AND ASSIGNING THEM AN IMAGE
-    if (w == 50) sprite = loadImage("greenalien.png");
-    else if (w == 65) sprite = loadImage("bluealien.png");
-    else if (w == 80) sprite = loadImage("purplealien.png");
+    if (w == 50) sprite = loadImage("greenalien copy.png");
+    else if (w == 65) sprite = loadImage("bluealien copy.png");
+    else if (w == 80) sprite = loadImage("purplealien copy.png");
   }
 
   void move() {

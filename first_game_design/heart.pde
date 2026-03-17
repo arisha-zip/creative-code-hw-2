@@ -15,7 +15,7 @@ public class Heart {
     w = width_;
     h = height_;
     speed = speed_;
-    sprite = loadImage("finalheart.png"); 
+    sprite = loadImage("finalheart copy.png"); 
   }
 
   void move() {

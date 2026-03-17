@@ -37,22 +37,22 @@ void setup() {
   gameState = "START"; //start screen 
 
   //ADDING IN MY ILLUSTRATIONS/IMAGES
-  bg = loadImage("finalpixelsky.png");
+  bg = loadImage("finalpixelsky copy.png");
   bg.resize(width, 0); 
-  g = loadImage("grassblock.png");
-  titleCard = loadImage("finaltitlecard.png");
-  endCard = loadImage("endcard.png");
-  winCard = loadImage("youwin.png");
-  pixelfy = createFont("pixelfysans.ttf", 25);
+  g = loadImage("grassblock copy.png");
+  titleCard = loadImage("finaltitlecard copy.png");
+  endCard = loadImage("endcard copy.png");
+  winCard = loadImage("youwin copy.png");
+  pixelfy = createFont("pixelfysans copy.ttf", 25);
 
   person1 = new Person(width/8, height-210); 
   obstacles = new ArrayList<Obstacle>(); 
   heart = null; //no hearts will appear on screen for now
   
   //ADDING IN MY SOUNDS
-  heartSound = new SoundFile(this, "twinklewoosh.wav");
-  alienSound = new SoundFile(this, "alienhit.wav");
-  bgMusic = new SoundFile(this, "ghostwaltz.wav");
+  heartSound = new SoundFile(this, "twinklewoosh copy.wav");
+  alienSound = new SoundFile(this, "alienhit copy.wav");
+  bgMusic = new SoundFile(this, "ghostwaltz copy.wav");
 }
 
 void draw() {

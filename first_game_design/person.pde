@@ -25,7 +25,7 @@ public class Person {
     isJumping = false;
     isFalling = false;
 
-    sprite = loadImage("pinkgirly.png");
+    sprite = loadImage("pinkgirly copy.png");
     sprite.resize(w, h);
   }
 
