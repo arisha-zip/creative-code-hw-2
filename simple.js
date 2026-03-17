@@ -79,14 +79,6 @@ function playGame() {
 
   if (!bgMusic.isPlaying()) bgMusic.loop();
 
-  // player
-  person1.move();
-  person1.falling();
-  person1.display();
-
-  // island
-  image(g, 75, 233 + sceneOffset, 650, 90);
-
   // alien beam
   fill(55, 235, 52, 70);
   noStroke();
@@ -96,6 +88,14 @@ function playGame() {
     800, height,
     0, height
   );
+
+  // player
+  person1.move();
+  person1.falling();
+  person1.display();
+
+  // island
+  image(g, 75, 233 + sceneOffset, 650, 90);
 
   // timer
   elapsedTime = (millis() - startTime) / 1000.0;
