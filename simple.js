@@ -36,13 +36,13 @@ let floatAmount = 10;
 function preload() {
   bg = loadImage("assets/finalpixelsky.png");
   g = loadImage("assets/grassblock.png");
-  titleCard = loadImage("assets/titledrawing.png");
+  titleCard = loadImage("assets/titledrawingg.png");
   endCard = loadImage("assets/endcard.png");
   winCard = loadImage("assets/youwin.png");
 
   // BUTTON IMAGES
-  beginBtn = loadImage("assets/begin.png");
-  beginBtnHover = loadImage("assets/begin_hover.png");
+  beginBtn = loadImage("assets/beginn.png");
+  beginBtnHover = loadImage("assets/begin_hoverr.png");
 
   heartSound = loadSound("assets/twinklewoosh.wav");
   alienSound = loadSound("assets/alienhit.wav");
