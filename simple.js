@@ -211,7 +211,7 @@ image(person1.sprite, -40, -40, 80, 80);
 pop();
 
   // BUTTON
-  let btnW = 100;
+  let btnW = 220;
   let btnH = 90;
 
   let btnX = width * 0.15;
