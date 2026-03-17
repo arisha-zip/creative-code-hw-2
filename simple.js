@@ -245,15 +245,15 @@ function endGame() {
 
   textAlign(CENTER);
   textSize(70);
-  fill(255, 111, 241);
+  fill(218, 59, 198);
   text("GAME OVER", width / 2, height / 2);
 
   fill(255);
   textSize(20);
-  text("Time survived: " + displayTime + "s", width / 2, 230);
+  text("Time survived: " + displayTime + "s", width / 2, 300);
 
   textSize(14);
-  text("Click anywhere to restart", width / 2, 255);
+  text("Click anywhere to restart", width / 2, 325);
 
   if (mouseIsPressed) {
     bgMusic.stop();
