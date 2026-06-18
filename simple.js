@@ -52,7 +52,9 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(800, 580);
+  let canvas = createCanvas(800, 580);
+  canvas.style("width", "100%");
+  canvas.style("height", "auto");
   noSmooth();
 
   sceneOffset = (height - 400) / 2;
