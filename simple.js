@@ -36,7 +36,7 @@ let floatAmount = 10;
 function preload() {
   bg = loadImage("assets/finalpixelsky.png");
   g = loadImage("assets/grassblock.png");
-  titleCard = loadImage("assets/titledrawingNEW.png");
+  titleCard = loadImage("assets/titledrawingv3.gif");
   endCard = loadImage("assets/endcard.png");
   winCard = loadImage("assets/youwin.png");
 
