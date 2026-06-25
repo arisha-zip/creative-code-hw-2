@@ -36,7 +36,7 @@ let floatAmount = 10;
 function preload() {
   bg = loadImage("assets/finalpixelsky.png");
   g = loadImage("assets/grassblock.png");
-  titleCard = loadImage("assets/titledrawingv3.gif");
+  titleCard = loadImage("assets/titledrawingv4.png");
   endCard = loadImage("assets/endcard.png");
   winCard = loadImage("assets/youwin.png");
 
@@ -201,16 +201,16 @@ function startGame() {
   image(titleCard, 0, 0, width, height);
 
   // FLOATING CHARACTER
-  floatT += floatSpeed;
+  //floatT += floatSpeed;
 
-  let floatX = width * 0.75;
-  let floatY = 350 + sin(floatT) * floatAmount; // lower
+  //let floatX = width * 0.75;
+  //let floatY = 350 + sin(floatT) * floatAmount; // lower
 
-push();
-translate(floatX, floatY);
-rotate(radians(-45));
-image(person1.sprite, -40, -40, 80, 80);
-pop();
+//push();
+//translate(floatX, floatY);
+//rotate(radians(-45));
+//image(person1.sprite, -40, -40, 80, 80);
+//pop();
 
   // BUTTON
   let btnW = 220;
